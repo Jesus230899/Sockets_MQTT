@@ -37,7 +37,10 @@ Se usará onDisconnected y se revisa el ConnectionStatus para validar fallos, en
 
 
 
-
-
+## Generación de nuevas rutas
+1. Necesitas limpiar el generador, en caso de que haya algun tipo de conflicto
+- flutter packages pub run build_runner clean
+2. Generar nuevas rutas
+- flutter packages pub run build_runner build --delete-conflicting-outputs
 
 
