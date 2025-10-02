@@ -2,7 +2,6 @@ import 'dart:developer';
 
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:mqtt_client/mqtt_client.dart';
 import 'package:sockets_mqtt_app/core/env/env.dart';
 import 'package:sockets_mqtt_app/features/mqtt/data/datasources/mqtt_service.dart';
 import 'package:sockets_mqtt_app/features/mqtt/data/repositories/mqtt_repository_impl.dart';
