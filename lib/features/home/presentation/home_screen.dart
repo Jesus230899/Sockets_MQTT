@@ -21,7 +21,10 @@ class HomeScreen extends StatelessWidget {
             onPressed: () => AutoRouter.of(context).push(WebsocketRoute()),
           ),
           const SizedBox(height: 10),
-          _button(title: 'MQTT', onPressed: () {}),
+          _button(
+            title: 'MQTT',
+            onPressed: () => AutoRouter.of(context).push(MQTTRoute()),
+          ),
         ],
       ),
     );
