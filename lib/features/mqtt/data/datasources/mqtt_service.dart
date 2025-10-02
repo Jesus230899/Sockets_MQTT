@@ -120,7 +120,6 @@ class MQTTService {
       builder.addString('Mensaje desde flutter');
       // Publicamos el mensaje
       _client.publishMessage(Env.topic, MqttQos.atLeastOnce, builder.payload!);
-
     } catch (e) {
       log('Error al publicar: $e');
     }
