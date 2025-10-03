@@ -24,7 +24,6 @@ class _WebsocketScreenState extends State<WebsocketScreen> {
   @override
   Widget build(BuildContext _) {
     final wsService = WebSocketsService(url: 'wss://echo.websocket.org');
-    // final bloc = BlocProvider.of<WebsocketBloc>(context);
 
     return BlocProvider(
       create: (context) => WebsocketBloc(service: wsService),
@@ -59,9 +58,7 @@ class _WebsocketScreenState extends State<WebsocketScreen> {
           icon: Icons.login,
           title: 'Conectar',
           onPressed: () {
-            context.read<WebsocketBloc>().add(
-              WebSocketConnectRequestedEvent(),
-            ); // event: conectar
+            context.read<WebsocketBloc>().add(WebSocketConnectRequestedEvent());
           },
         ),
         _action(
@@ -70,7 +67,7 @@ class _WebsocketScreenState extends State<WebsocketScreen> {
           onPressed: () {
             context.read<WebsocketBloc>().add(
               WebSocketDisconnectRequestedEvent(),
-            ); // event: desconectar
+            );
           },
         ),
         _action(
@@ -78,13 +75,8 @@ class _WebsocketScreenState extends State<WebsocketScreen> {
           title: 'Reconectar',
           onPressed: () {
             // Reconexión forzada mediante el servicio
-            context
-                .read<WebsocketBloc>()
-                .service
-                .forceReconnect(); // forzamos reconexión desde servicio
-            context.read<WebsocketBloc>().add(
-              WebSocketConnectRequestedEvent(),
-            ); // pedimos conectar
+            context.read<WebsocketBloc>().service.forceReconnect();
+            context.read<WebsocketBloc>().add(WebSocketConnectRequestedEvent());
           },
         ),
       ],
@@ -113,30 +105,28 @@ class _WebsocketScreenState extends State<WebsocketScreen> {
   Widget _content(BuildContext context) {
     return Column(
       children: [
-        // Widget que muestra el estado de conexión
         BlocBuilder<WebsocketBloc, WebsocketState>(
           builder: (context, state) {
-            // por defecto mostramos desconectado
-            String text = 'Desconectado'; // texto default
-            Color color = Colors.red; // color default
+            String text = 'Desconectado';
+            Color color = Colors.red;
             if (state is WebSocketConnecting) {
-              text = 'Conectando...'; // texto si conectando
-              color = Colors.orange; // color naranja
+              text = 'Conectando...';
+              color = Colors.orange;
             } else if (state is WebSocketConnected) {
-              text = 'Conectado'; // texto si conectado
-              color = Colors.green; // color verde
+              text = 'Conectado';
+              color = Colors.green;
             } else if (state is WebSocketDisconnected) {
-              text = 'Desconectado'; // texto si desconectado
-              color = Colors.red; // color rojo
+              text = 'Desconectado';
+              color = Colors.red;
             } else if (state is WebsocketInitial) {
-              text = 'Inicial'; // estado inicial
-              color = Colors.grey; // color gris
+              text = 'Inicial';
+              color = Colors.grey;
             }
             return Container(
-              color: color.withOpacity(0.1), // fondo con opacidad
-              padding: EdgeInsets.all(8), // padding
-              width: double.infinity, // ancho completo
-              child: Text(text, textAlign: TextAlign.center), // texto centrado
+              color: color.withValues(alpha: 0.1),
+              padding: EdgeInsets.all(8),
+              width: double.infinity,
+              child: Text(text, textAlign: TextAlign.center),
             );
           },
         ),
@@ -145,16 +135,13 @@ class _WebsocketScreenState extends State<WebsocketScreen> {
         BlocBuilder<WebsocketBloc, WebsocketState>(
           builder: (context, state) {
             if (state is WebSocketDisconnected && state.error != null) {
-              // si hay error lo mostramos
               return Container(
-                color: Colors.red.withOpacity(0.1), // fondo en rojo claro
-                padding: EdgeInsets.all(8), // padding
-                child: Text(
-                  'Error: ${state.error}',
-                ), // mostrar mensaje de error
+                color: Colors.red.withValues(alpha: 0.1),
+                padding: EdgeInsets.all(8),
+                child: Text('Error: ${state.error}'),
               );
             }
-            return SizedBox.shrink(); // widget vacío si no hay error
+            return SizedBox.shrink();
           },
         ),
 
@@ -163,20 +150,17 @@ class _WebsocketScreenState extends State<WebsocketScreen> {
           height: 200,
           child: BlocBuilder<WebsocketBloc, WebsocketState>(
             builder: (context, state) {
-              List<String> messages = []; // lista por defecto
+              List<String> messages = [];
               if (state is WebSocketConnected) {
-                messages =
-                    state.messages; // usamos mensajes del estado conectado
+                messages = state.messages;
               }
               return ListView.builder(
-                reverse: true, // que muestre primero los últimos
-                itemCount: messages.length, // cantidad de items
+                reverse: true,
+                itemCount: messages.length,
                 shrinkWrap: true,
                 physics: NeverScrollableScrollPhysics(),
                 itemBuilder: (context, index) {
-                  return ListTile(
-                    title: Text(messages[index]), // mensaje
-                  );
+                  return ListTile(title: Text(messages[index]));
                 },
               );
             },
@@ -185,23 +169,19 @@ class _WebsocketScreenState extends State<WebsocketScreen> {
 
         // Input para enviar mensajes y botón
         Padding(
-          padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4), // padding
+          padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
           child: Row(
             children: [
               Expanded(
                 child: TextField(
-                  controller: _controller, // controlador del input
-                  decoration: InputDecoration(
-                    hintText: 'Mensaje a enviar',
-                  ), // placeholder
-                  onSubmitted: (_) =>
-                      _send(context.read<WebsocketBloc>()), // enviar al submit
+                  controller: _controller,
+                  decoration: InputDecoration(hintText: 'Mensaje a enviar'),
+                  onSubmitted: (_) => _send(context.read<WebsocketBloc>()),
                 ),
               ),
               IconButton(
-                icon: Icon(Icons.send), // icono enviar
-                onPressed: () =>
-                    _send(context.read<WebsocketBloc>()), // enviar al presionar
+                icon: Icon(Icons.send),
+                onPressed: () => _send(context.read<WebsocketBloc>()),
               ),
             ],
           ),
@@ -210,13 +190,10 @@ class _WebsocketScreenState extends State<WebsocketScreen> {
     );
   }
 
-  /// Helper para enviar mensajes al BLoC.
   void _send(WebsocketBloc bloc) {
-    final text = _controller.text.trim(); // texto del input
-    if (text.isEmpty) return; // si está vacío, no hacemos nada
-    bloc.add(
-      WebSocketSendMessageEvent(text),
-    ); // despachamos evento para enviar mensaje
-    _controller.clear(); // limpiamos el input
+    final text = _controller.text.trim();
+    if (text.isEmpty) return;
+    bloc.add(WebSocketSendMessageEvent(text));
+    _controller.clear();
   }
 }
