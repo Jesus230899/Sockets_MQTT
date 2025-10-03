@@ -1,0 +1,49 @@
+
+# Definir nombre de nuestro Pipeline
+name: Flutter CI
+
+# Definir la acción que hará que se active esto
+on:
+  push:
+    branches: ["dev"]
+    
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Descargar tu repo
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # 2. Instalar Flutter (última versión estable)
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+          flutter-version: '3.35.5' # (puedes fijar la versión que uses)
+
+      # 3. Obtener dependencias
+      - name: Install dependencies
+        run: flutter pub get
+
+      # 4. Ejecutar análisis
+      - name: Analyze
+        run: flutter analyze
+
+      # 5. Ejecutar tests opcionales
+      - name: Run tests
+        run: flutter test
+
+      # 6. Compilar APK release
+      - name: Build APK
+        run: flutter build apk --release
+
+      # 7. Guardar el APK como artefacto
+      - name: Upload APK artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-release-apk
+          path: build/app/outputs/flutter-apk/app-release.apk
+
+          
