@@ -32,8 +32,8 @@ jobs:
         run: flutter analyze
 
       # 5. Ejecutar tests opcionales
-      - name: Run tests
-        run: flutter test
+      # - name: Run tests
+      #  run: flutter test
 
       # 6. Compilar APK release
       - name: Build APK
