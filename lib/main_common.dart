@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:sockets_mqtt_app/core/routes/app_router.dart';
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  MyApp({super.key});
+
+  final _appRouter = AppRouter();
 
   @override
   Widget build(BuildContext context) {
@@ -13,7 +15,7 @@ class MyApp extends StatelessWidget {
       ).copyWith(textScaler: const TextScaler.linear(1)),
       child: MaterialApp.router(
         debugShowCheckedModeBanner: false,
-        routerConfig: AppRouter().config(),
+        routerConfig: _appRouter.config(),
         builder: (_, child) => child ?? const CircularProgressIndicator(),
       ),
     );

@@ -1,7 +1,7 @@
 # sockets_mqtt_app
 Este es un proyecto para una aplicación que sirva de ejemplo para la integración de:
 1. WebSockets (wss://echo.websocket.org)
-2. MQTT
+2. MQTT (Mosquitto o HiveMQ Clud)
 3. BLoC
 4. Clean Architecture (DDD)
 
